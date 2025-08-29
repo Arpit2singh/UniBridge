@@ -2,9 +2,13 @@ import mongoose from "mongoose" ;
 import dbName from "../constant.js";
 
 
+
+
 const dbLogic = async ()=>{
+    console.log(process.env.URL) ; 
+    console.log(dbName) ; 
     try{
-         const mongooseInstance = mongoose.connect(`${process.env.URL}/${dbName}`) ; 
+         const mongooseInstance = await mongoose.connect(`${process.env.URL}/${dbName}`) ; 
          console.log("db is connected") ; 
          console.log(`db is connected at the ${mongooseInstance.connection.host}`) ; 
     }

@@ -27,7 +27,7 @@ app.use(cors({
 
 app.use(cookieParser()); 
 
-app.use("api1/v1/UniBridge" , userRoutes) ; 
+app.use("/api1/v1/UniBridge" , userRoutes) ; 
 
 app.listen(process.env.PORT , (req ,res)=>{
     console.log(`server is running on the port ${process.env.PORT}` )
