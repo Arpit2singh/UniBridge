@@ -30,6 +30,13 @@ const userSchema = new mongoose.Schema({
         type:String , 
         required:true , 
     },
+    twoStepVerify:{
+        type:Boolean ,
+    },
+    twoStepOtp:{
+        type:String,
+        default:null , 
+    },
     accessToken:{
         type:String , 
         
@@ -51,6 +58,10 @@ const userSchema = new mongoose.Schema({
 
  userSchema.methods.isPasswordCorrect =  async function(password){
     return await bcrypt.compare(password , this.password) ; 
+ }
+
+ userSchema.methods.checkOtpVerify = async function(otp){
+    return otp === twoStepOtp ; 
  }
 
  userSchema.methods.generateAccessToken = function(){
