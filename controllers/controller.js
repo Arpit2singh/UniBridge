@@ -5,6 +5,7 @@ import uploadOnCloudianry from "../utils/cloudinary.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import { access } from "fs";
 import jwt from "jsonwebtoken";
+import TwostepemailService from "./2-stepVerification.controller.js";
 
 
 
@@ -27,13 +28,14 @@ const generateRefreshAccessToken = async function (UserId) {
 }
 
 const registerUser = asyncHandler(async (req, res) => {
-    const { username, fullname, password, email, phoneNumber, gender } = req.body;
+    const { username, fullname, password, email, phoneNumber, gender , twoStep } = req.body;
     console.log(username);
     console.log(fullname);
     console.log(password);
     console.log(email);
     console.log(gender);
-    console.log(phoneNumber);
+    console.log(phoneNumber); 
+    console.log(twoStep) ; 
     if (username === "") {
         throw new ApiError(101, "userName is empty ")
     }
@@ -46,6 +48,7 @@ const registerUser = asyncHandler(async (req, res) => {
     if (fullname === "") {
         throw new ApiError(101, "fullName is empty ")
     }
+    
 
     const existedUser = await User.findOne({
         $or: [{ username }, { email }]
@@ -87,6 +90,7 @@ const registerUser = asyncHandler(async (req, res) => {
         phoneNumber,
         avatar: avatar.url,
         gender,
+        twoStepVerify : twoStep 
 
 
     })
@@ -152,52 +156,50 @@ const loginuser = asyncHandler(async (req, res) => {
         await user.save({ validateBeforeSave: false });
        
 
-            const sendingotp = async function () {
-                const response = await fetch(`http://localhost:3000/api1/v1/UniBridge/emailgo`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        email: email,
-                        otp: otp,
-                    })
-                })
-            }
+            // const sendingotp = async function () {
+            //     const response = await fetch(`http://localhost:3000/api1/v1/UniBridge/verifyUser`, {
+            //         method: "POST",
+            //         headers: {
+            //             "Content-Type": "application/json",
+            //         },
+            //         body: JSON.stringify({
+            //             email: user.email,
+            //             otp: otp,
+            //         })
+            //     })
+            //     const data = await response.json() ; 
+            //     return res.status(201).json(new ApiResponse(201 , "Api hit otp send on the mail" , data))
+            // }
+            // const sender = await sendingotp() ; 
 
             // verifying the otp inside the schema and after verifying maaking it null .. 
-            const correctStatus = async function () {
-                const response = await fetch(`http://localhost:3000/api1/v1/UniBridge/verifier`,
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({
-                            email: email,
-                            otp: otp
-                        })
-                    }
-                )
-            }
+            // const correctStatus = async function () {
+            //     const response = await fetch(`http://localhost:3000/api1/v1/UniBridge/verifier`,
+            //         {
+            //             method: "POST",
+            //             headers: {
+            //                 "Content-Type": "application/json",
+            //             },
+            //             body: JSON.stringify({
+            //                 email: user.email,
+            //                 otp: otp
+            //             })
+            //         }
+            //     )
+                
+              
+            // }
+            //   const data = await sendingotp();
 
+             const data =  await TwostepemailService(user.email , otp)
+
+            
+              return res.status(200).json(new ApiResponse(201 , " otp is send to your mail please verify", data))
+                
+           
             //generating Token Based on the verificationStatus  , 
 
-           const status = await correctStatus();
-           if (!status) {
-              throw new ApiError(400, "OTP not verified, re-enter it");
-            }
-
-            const generatorAccessRefresh = async function () {
-                const { refreshToken, accessToken } = await generateRefreshAccessToken(user._id)
-                const LoggedInUser = await User.findById(user._id).select("-password -refreshToken")
-
-                return res.status(200).cookie("refreshToken", refreshToken, options).cookie("accessToken", accessToken, options).json(
-                    new ApiResponse(201, "user Loggedin SuccessFully", {
-                        user: accessToken, refreshToken, LoggedInUser
-                    })
-                )
-            }
+          
         
 
     }

@@ -17,7 +17,7 @@ import jwt from "jsonwebtoken" ;
     secure : false , 
     auth :{
         user : "arpitno57@gmail.com",
-        pass : "yjsfxsftdbzdwamj" ,
+        pass : process.env.SMTP ,
     }
 })
 

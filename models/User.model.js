@@ -61,7 +61,7 @@ const userSchema = new mongoose.Schema({
  }
 
  userSchema.methods.checkOtpVerify = async function(otp){
-    return otp === twoStepOtp ; 
+    return String(this.twoStepOtp) === String(otp); 
  }
 
  userSchema.methods.generateAccessToken = function(){
