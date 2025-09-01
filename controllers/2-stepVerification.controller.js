@@ -17,7 +17,7 @@ import jwt from "jsonwebtoken" ;
     secure : false , 
     auth :{
         user : "arpitno57@gmail.com",
-        pass : "zmbjfwkbhdgcrkgi" ,
+        pass : "" ,
     }
 })
     const {otp} = req.body; 
