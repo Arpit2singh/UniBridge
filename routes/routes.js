@@ -1,27 +1,32 @@
-import { Router } from "express"; 
-import express from "express" 
-import {registerUser , loginuser , Logout , refreshAccessToken} from "../controllers/controller.js";
+import { Router } from "express";
+import express from "express"
+import { registerUser, loginuser, Logout, refreshAccessToken } from "../controllers/controller.js";
 import upload from "../middleware/multer.js";
-import verifyJwt from "../middleware/auth.middleware.js"; 
+import verifyJwt from "../middleware/auth.middleware.js";
 import emailService from "../controllers/email.controller.js";
 import TwostepemailService from "../controllers/2-stepVerification.controller.js";
 import verifier from "../controllers/verifyotp.controller.js";
+import remainder from "../controllers/remainder.controller.js";
+import summary from "../controllers/Summary.controller.js";
+import feedback from "../controllers/Feedback.controller.js";
 
-
-const router = express.Router() ; 
+const router = express.Router();
 
 
 router.route("/register").post(
     upload.single("avatar"),
-    registerUser) ;
+    registerUser);
 
-    router.route("/LoggedIn").post(loginuser) ; 
-     router.route("/Logout").post( verifyJwt ,Logout) ; 
-      router.route("/refreshToken").post( refreshAccessToken) ; 
-       router.route("/emailgo").post(emailService) ; 
-       router.route("/verifyUser").post(TwostepemailService)
-       router.route("/verifier").post(verifier) ; 
-    //    router.route('*' , (req ,res)=>{
-    //     res.status(401).sendFile(__dirname + "backend\public\error404.html")
-    //    })
-export default router ;
+router.route("/LoggedIn").post(loginuser);
+router.route("/Logout").post(verifyJwt, Logout);
+router.route("/refreshToken").post(refreshAccessToken);
+router.route("/emailgo").post(emailService);
+router.route("/verifyUser").post(TwostepemailService)
+router.route("/verifier").post(verifier);
+//    router.route('*' , (req ,res)=>{
+//     res.status(401).sendFile(__dirname + "backend\public\error404.html")
+//    })
+router.route("/remainderAgent").post(remainder);
+router.route("/summarytaker").post(summary);
+router.route("/feedback").post(feedback);
+export default router;

@@ -141,7 +141,7 @@ const loginuser = asyncHandler(async (req, res) => {
         const LoggedInUser = await User.findById(user._id).select("-refreshToken  -password");
         const options = {
             httpOnly: true,
-            secure: true,
+            secure: false,
         }
         return res.status(200).cookie("refreshToken", refreshToken, options).cookie("accessToken", accessToken, options).json(
             new ApiResponse(201, "user Loggedin SuccessFully", {
@@ -207,7 +207,7 @@ const loginuser = asyncHandler(async (req, res) => {
 })
 
 const Logout = asyncHandler(async (req, res) => {
-    const user = await User.findByIdAndUpdate(req.body._id, {
+    const user = await User.findByIdAndUpdate(req.user._id, {
         $set: {
             refreshToken: undefined
         }
@@ -215,10 +215,11 @@ const Logout = asyncHandler(async (req, res) => {
         new: true
     })
 
-    const options = {
-        httpOnly: true,
-        secure: true,
-    }
+  const options = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production" ? true : false, // false locally
+    sameSite: "lax" // ensures cookie is sent cross-site in dev
+}
 
     return res.status(200).clearCookie("accessToken", options).clearCookie("refreshToken", options).json(new ApiResponse(201, {}, "user Loggout SuccessFully"))
 })

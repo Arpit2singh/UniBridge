@@ -20,7 +20,7 @@ const TwostepemailService = async (email, otp) => {
       secure: false,
       auth: {
         user: "arpitno57@gmail.com",
-        pass: process.env.SMTP,
+        pass: "",
       },
     });
 

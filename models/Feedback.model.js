@@ -1,16 +1,16 @@
 import mongoose from "mongoose" ; 
-import { User } from "./User.model";
+import { User } from "./User.model.js";
 const feedbackSchema = new mongoose.Schema({
-    user : {
-        type : mongoose.Schema.Types.ObjectId,
-        ref : "User" 
+    name : {
+        type :String,
+        required : true,
     },
     message:{
         type : String , 
         required : true  , 
     } , 
-     rating:{
-        type : Number , 
+     email:{
+        type : String , 
         required : true  , 
     } , 
 } , {timestamps:true})

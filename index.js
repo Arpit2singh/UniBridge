@@ -2,7 +2,7 @@ import express from "express" ;
 import dotenv from "dotenv" ; 
 import dbLogic from "./db/db.connection.js";
 import app from "./app.js";
-
+import RemainderEmailService from "./services/RemainderEmail.Service.js";
 dotenv.config({
     path:"./.env",
 })
@@ -20,8 +20,10 @@ dotenv.config({
 dbLogic().then(app.listen(process.env.PORT , ()=>{
     console.log(`server is listening on the port ${process.env.PORT}` ) ; 
         console.log(`db is connected at the port http://localhost:${process.env.PORT}`) 
-
-
+     RemainderEmailService() ;
+         
+    console.log("email service is started")
+       
     })).catch((error)=>{
         console.log(error)
     })
