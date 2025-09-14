@@ -13,10 +13,24 @@ const app = express();
 const _fileName = fileURLToPath(import.meta.url);
 const _dirName = path.dirname(_fileName);
 
+// Allowed origins (local + Vercel frontend)
+const allowedOrigins = [
+  "http://127.0.0.1:3001", // local frontend
+  "http://localhost:3000",  // local frontend (React default)
+  "https://uni-bridge-frontend-lv80iiwhf-arpit-singhs-projects-aef1f2bc.vercel.app" // Vercel
+];
+
+// CORS middleware
 app.use(
   cors({
-    origin: process.env.CORS, 
-    credentials: true,       
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
   })
 );
 
